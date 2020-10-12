@@ -1,0 +1,26 @@
+version: "3"
+services:
+  nginx01:
+  image: nginx:latest
+  ports:
+    - 8000:80
+  volumes:
+    - db_data:/usr/local/etc/nginx
+  networks:
+    - nginx_net
+  deploy:
+    labels: [mynginx test]
+    mode: replicated
+    replicas: 3
+    update_config:
+      parallelism: 2
+      delay: 10s
+    placement:
+      constraints: [node.role == worker]
+    restart_policy:
+      condition: on-failure
+
+networks:
+nginx_net:
+volumes:
+db_data:
